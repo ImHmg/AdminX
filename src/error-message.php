@@ -23,5 +23,17 @@ class ErrorMessage
         $this->messages[] = $message;
     }
 
+    public function hasErrors() {
+        return count($this->messages) > 0;
+    }
+
+    public function toString() {
+        $str = "";
+        foreach ($this->messages as $message) {
+            $str .= $message . '</br>';
+        }
+        return $str;
+    }
+
 }
 ?>

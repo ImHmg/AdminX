@@ -23,6 +23,18 @@ class ErrorMessage
         $this->messages[] = $message;
     }
 
+    public function hasErrors() {
+        return count($this->messages) > 0;
+    }
+
+    public function toString() {
+        $str = "";
+        foreach ($this->messages as $message) {
+            $str .= $message . '</br>';
+        }
+        return $str;
+    }
+
 }
 ?><?php 
 
@@ -296,8 +308,31 @@ function getDashboardHtml() {
 ?><?php 
 
     function loginPage() {
-        $template = "<!DOCTYPE html>\r\n<html lang=\"en\">\r\n\r\n<head>\r\n    <meta charset=\"UTF-8\">\r\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\r\n    <title>Database Login</title>\r\n    <link href=\"https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css\" rel=\"stylesheet\">\r\n    __THEME_CSS__\r\n</head>\r\n\r\n<body>\r\n    <div class=\"container d-flex justify-content-center align-items-center vh-100\">\r\n        <div class=\"card\" style=\"width: 400px;\">\r\n            <h4 class=\"text-center login-title\" >AdminX</h4>\r\n            <div class=\"login-form-container\">\r\n                <form action=\"index.php\" method=\"POST\">\r\n                    <div class=\"mb-1\">\r\n                        <label class=\"form-label\">Host</label>\r\n                        <input type=\"text\" class=\"form-control\" placeholder=\"Enter server\" name=\"server\" required />\r\n                    </div>\r\n                    <div class=\"mb-1\">\r\n                        <label class=\"form-label\">Port</label>\r\n                        <input type=\"number\" class=\"form-control\" placeholder=\"Enter port\" name=\"port\" required />\r\n                    </div>\r\n                    <div class=\"mb-1\">\r\n                        <label class=\"form-label\">Username</label>\r\n                        <input type=\"text\" class=\"form-control\" placeholder=\"Enter username\" name=\"user\" required />\r\n                    </div>\r\n                    <div class=\"mb-1\">\r\n                        <label class=\"form-label\">Password</label>\r\n                        <input type=\"password\" class=\"form-control\" placeholder=\"Enter password\" name=\"password\" />\r\n                    </div>\r\n                    <div class=\"mb-3\">\r\n                        <label class=\"form-label\">Database</label>\r\n                        <input type=\"text\" class=\"form-control\" placeholder=\"Enter database name\" name=\"schema\" />\r\n                    </div>\r\n                    <div class=\"login-button-container\">\r\n                        <input class=\"btn btn-primary login-button\" name=\"action_connect\" value=\"Connect\" type=\"submit\" />\r\n                    </div>\r\n                </form>\r\n            </div>\r\n\r\n        </div>\r\n    </div>\r\n</body>\r\n\r\n</html>";
+
+        function getValue($key) {
+            if (isset($_GET[$key])) {
+                return $_GET[$key];
+            } elseif (isset($_POST[$key])) {
+                return $_POST[$key];
+            } elseif (isset($_COOKIE[$key])) {
+                return $_COOKIE[$key];
+            }
+            return '';
+        }
+
+        $template = "<!DOCTYPE html>\r\n<html lang=\"en\">\r\n\r\n<head>\r\n    <meta charset=\"UTF-8\">\r\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\r\n    <title>Database Login</title>\r\n    <link href=\"https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css\" rel=\"stylesheet\">\r\n    __THEME_CSS__\r\n</head>\r\n\r\n<body>\r\n    <div class=\"container d-flex justify-content-center align-items-center\" style=\"min-height: 100vh;\">\r\n        <div class=\"card\" style=\"width: 400px;\">\r\n            <h4 class=\"text-center login-title\" >AdminX</h4>\r\n            <div class=\"login-form-container\">\r\n                <form action=\"index.php\" method=\"POST\">\r\n                    <div class=\"mb-1\">\r\n                        <label class=\"form-label\">Host</label>\r\n                        <input type=\"text\" class=\"form-control\" placeholder=\"Enter server\" name=\"server\" value=\"__INPUT_SERVER__\" required />\r\n                    </div>\r\n                    <div class=\"mb-1\">\r\n                        <label class=\"form-label\">Port</label>\r\n                        <input type=\"text\" class=\"form-control\" placeholder=\"Enter port\" name=\"port\" value=\"__INPUT_PORT__\" required />\r\n                    </div>\r\n                    <div class=\"mb-1\">\r\n                        <label class=\"form-label\">User</label>\r\n                        <input type=\"text\" class=\"form-control\" placeholder=\"Enter username\" name=\"user\" value=\"__INPUT_USER__\" required />\r\n                    </div>\r\n                    <div class=\"mb-1\">\r\n                        <label class=\"form-label\">Password</label>\r\n                        <input type=\"password\" class=\"form-control\" placeholder=\"Enter password\" name=\"password\" />\r\n                    </div>\r\n                    <div class=\"mb-3\">\r\n                        <label class=\"form-label\">Database</label>\r\n                        <input type=\"text\" class=\"form-control\" placeholder=\"Enter database name\" name=\"schema\" value=\"__INPUT_SCHEMA__\" />\r\n                    </div>\r\n                    <div class=\"login-button-container\">\r\n                        <input class=\"btn btn-primary login-button\" name=\"action_connect\" value=\"Connect\" type=\"submit\" />\r\n                    </div>\r\n                    __ERROR__\r\n                </form>\r\n            </div>\r\n\r\n        </div>\r\n    </div>\r\n</body>\r\n\r\n</html>";
         $template = str_replace('__THEME_CSS__', '<style>' . getThemeCss() . '</style>', $template);
+        $template = str_replace('__INPUT_SERVER__', getValue('server'), $template);
+        $template = str_replace('__INPUT_PORT__', getValue('port'), $template);
+        $template = str_replace('__INPUT_USER__', getValue('user'), $template);
+        $template = str_replace('__INPUT_SCHEMA__', getValue('schema'), $template);
+
+        if(ErrorMessage::get()->hasErrors()) {
+            $template = str_replace('__ERROR__', '<div class="alert alert-danger login-alert mt-3" role="alert">' . ErrorMessage::get()->toString() .  '</div>', $template);
+        } else {
+            $template = str_replace('__ERROR__', '', $template);
+        }
+
         return $template;
     }
 

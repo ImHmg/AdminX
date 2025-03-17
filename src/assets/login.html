@@ -10,22 +10,22 @@
 </head>
 
 <body>
-    <div class="container d-flex justify-content-center align-items-center vh-100">
+    <div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh;">
         <div class="card" style="width: 400px;">
             <h4 class="text-center login-title" >AdminX</h4>
             <div class="login-form-container">
                 <form action="index.php" method="POST">
                     <div class="mb-1">
                         <label class="form-label">Host</label>
-                        <input type="text" class="form-control" placeholder="Enter server" name="server" required />
+                        <input type="text" class="form-control" placeholder="Enter server" name="server" value="__INPUT_SERVER__" required />
                     </div>
                     <div class="mb-1">
                         <label class="form-label">Port</label>
-                        <input type="number" class="form-control" placeholder="Enter port" name="port" required />
+                        <input type="text" class="form-control" placeholder="Enter port" name="port" value="__INPUT_PORT__" required />
                     </div>
                     <div class="mb-1">
-                        <label class="form-label">Username</label>
-                        <input type="text" class="form-control" placeholder="Enter username" name="user" required />
+                        <label class="form-label">User</label>
+                        <input type="text" class="form-control" placeholder="Enter username" name="user" value="__INPUT_USER__" required />
                     </div>
                     <div class="mb-1">
                         <label class="form-label">Password</label>
@@ -33,11 +33,12 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Database</label>
-                        <input type="text" class="form-control" placeholder="Enter database name" name="schema" />
+                        <input type="text" class="form-control" placeholder="Enter database name" name="schema" value="__INPUT_SCHEMA__" />
                     </div>
                     <div class="login-button-container">
                         <input class="btn btn-primary login-button" name="action_connect" value="Connect" type="submit" />
                     </div>
+                    __ERROR__
                 </form>
             </div>
 
