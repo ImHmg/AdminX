@@ -12,7 +12,7 @@ function handleRoute() {
         try {
             DBClient::get();
             setDatabaseDetails();
-            // return '<script>window.location.href = "/index.php";</script>';
+            return '<script>window.location.href = "index.php";</script>';
         }catch(Exception $e) {
             ErrorMessage::get()->add($e->getMessage());
             return loginPage();
@@ -21,7 +21,7 @@ function handleRoute() {
 
     // If connection details not available redirect to login page
     if(!isDatabaseDetailsAvailable()) {
-        return '<script>window.location.href = "/index.php?p=login";</script>';
+        return '<script>window.location.href = "index.php?p=login";</script>';
     }
     
 
@@ -55,7 +55,7 @@ function handleRoute() {
     
     if(isset($_GET['action_logout'])) {
         clearDatabaseDetails();
-        return '<script>window.location.href = "/index.php?p=login";</script>';
+        return '<script>window.location.href = "index.php?p=login";</script>';
     }
     return queryPage();
 }

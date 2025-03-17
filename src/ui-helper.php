@@ -30,8 +30,8 @@ function getTablesRow() {
                                     </a>
                                     <ul class="dropdown-menu dropdown-menu-dark">
                                      <h6 class="dropdown-header">'. $c .' table</h6>
-                                      <li><a class="dropdown-item" href="/index.php?action_view_100_rows=1&table='. $c .'">View 100 Rows</a></li>
-                                      <li><a class="dropdown-item" href="/index.php?action_desc_table=1&table='. $c .'">Describe</a></li>
+                                      <li><a class="dropdown-item" href="index.php?action_view_100_rows=1&table='. $c .'">View 100 Rows</a></li>
+                                      <li><a class="dropdown-item" href="index.php?action_desc_table=1&table='. $c .'">Describe</a></li>
                                     </ul>
                                 </div>
                             </td>
@@ -43,8 +43,13 @@ function getTablesRow() {
 
 
 function getThemeCss() {
+    $css = '';
+    if(file_exists('theme.css')) {
+        $css = file_get_contents('theme.css');
+    }
+
     $theme = "#FSTRINCLUDE assets/theme.css";
-    return $theme;
+    return $theme . $css;
 }
 
 function getDashboardHtml() {

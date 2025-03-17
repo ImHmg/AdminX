@@ -1,7 +1,9 @@
 <?php 
 
     function loginPage() {
-        return "#FSTRINCLUDE assets/login.html";
+        $template = "#FSTRINCLUDE assets/login.html";
+        $template = str_replace('__THEME_CSS__', '<style>' . getThemeCss() . '</style>', $template);
+        return $template;
     }
 
 ?>

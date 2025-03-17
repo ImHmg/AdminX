@@ -31,7 +31,7 @@
                     <select class="form-select w-auto dashboard-schema-select-form"" aria-label=" Small select example">
                         __DB_OPTIONS__
                     </select>
-                    <a href="/index.php?action_logout=1" class="navigation-logout-button">Logout</a>
+                    <a href="index.php?action_logout=1" class="navigation-logout-button">Logout</a>
                 </div>
             </div>
         </div>
@@ -92,7 +92,7 @@
         $(document).ready(function () {
             $('.dashboard-schema-select-form').change(function () {
                 var selectedValue = $(this).val();
-                window.location.href = '/index.php?action_change_schema=1&schema=' + selectedValue;
+                window.location.href = 'index.php?action_change_schema=1&schema=' + selectedValue;
             });
             if($('.dashboard-schema-select-form').val().length == 0) {
                 $('.dashboard-tables-container-not-table').show();
