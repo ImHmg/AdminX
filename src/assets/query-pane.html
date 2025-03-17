@@ -1,0 +1,121 @@
+<div class="query-editor-container" id="queryEditorContainer">
+    <div class="query-editor-toolbar">
+        <button type="button" class="btn btn-success btn-sm query-editor-run-button" onclick="submitQueryForm()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-play"
+                viewBox="0 0 16 16">
+                <path
+                    d="M10.804 8 5 4.633v6.734zm.792-.696a.802.802 0 0 1 0 1.392l-6.363 3.692C4.713 12.69 4 12.345 4 11.692V4.308c0-.653.713-.998 1.233-.696z" />
+            </svg>
+            Run
+        </button>
+    </div>
+    <div id="queryEditor" class="query-editor-inner-container">
+        <textarea id="queryEditorTextArea"></textarea>
+    </div>
+
+    <form action="" class="query-editor-form" method="POST">
+        <textarea id="form-input-query" name="query"></textarea>
+        <input type="text" name="action_execute_query" value="submit" />
+    </form>
+</div>
+<div class="query-result-container" id="queryResultContainer">
+   <div class="query-result-toolbar">
+
+   </div>
+
+   <div class="query-result-table-container">
+        __RESULT__
+   </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/mode/sql/sql.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/addon/hint/show-hint.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/addon/hint/sql-hint.min.js"></script>
+
+
+<script>
+    var customKeywords = __EDITOR_KEYWORDS__;
+    var executedQuery = "__QUERY__";
+
+    function sqlHint(editor) {
+        var cursor = editor.getCursor();
+        var token = editor.getTokenAt(cursor);
+        var suggestions = [];
+
+        var sqlKeywords = ["SELECT", "FROM", "WHERE", "INSERT", "UPDATE", "DELETE", "JOIN", "ON", "ORDER BY", "GROUP BY", "HAVING", "LIMIT"];
+        
+        suggestions = suggestions.concat(sqlKeywords);
+        suggestions = suggestions.concat(customKeywords);
+
+        return {
+        list: suggestions.filter(s => s.toLowerCase().includes(token.string.toLowerCase())), // Filter by input
+        from: { line: cursor.line, ch: token.start },
+        to: { line: cursor.line, ch: token.end }
+    };
+    }
+
+
+    var editor = CodeMirror.fromTextArea(document.getElementById("queryEditorTextArea"), {
+        mode: "text/x-sql",
+        lineNumbers: true,
+        theme: "default",
+        autoCloseBrackets: true,
+        extraKeys: {
+            "Ctrl-Space": function(cm) {
+                cm.showHint({ hint: sqlHint, completeSingle: false });
+            },
+            "Tab": function(cm) {
+                if (cm.somethingSelected()) {
+                    cm.indentSelection("add");
+                } else {
+                    cm.showHint({ hint: sqlHint, completeSingle: false });
+                }
+            }
+        },
+    });
+
+    editor.on("inputRead", function(cm, event) {
+        if (!cm.state.completionActive && event.origin !== "paste") {
+            cm.showHint({ hint: sqlHint, completeSingle: false });
+        }
+    });
+
+
+    function setEditorSize() {
+        editor.setSize($('#queryEditor').width(), $('#queryEditor').height() - ($('.query-editor-toolbar').height() + 10));
+        $('.query-result-table-container').width($('#queryResultContainer').width()).height($('#queryResultContainer').height() - $('.query-result-toolbar').height());
+    }
+
+    setTimeout(() => {
+        setEditorSize();
+        
+        if(!executedQuery.startsWith("__QUERY")) {
+            editor.setValue(executedQuery);
+        }
+    }, 100);
+
+    Split(['#queryEditorContainer', '#queryResultContainer'], {
+        sizes: [40, 60],
+        direction: 'vertical',
+        onDragEnd: function (sizes) {
+            setEditorSize();
+        },
+        onDrag: function (sizes) {
+            setEditorSize();
+        }
+    });
+
+    $(window).on("resize", function () {
+        setEditorSize();
+    });
+
+
+    function submitQueryForm() {
+        $('#form-input-query').val(editor.getValue());
+        $('.query-editor-form').submit();
+    }
+
+   
+
+</script>
