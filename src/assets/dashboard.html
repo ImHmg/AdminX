@@ -27,11 +27,26 @@
             </div>
             <div class="dashboard-schema-select-container">
                 <div class="dashboard-schema-select">
+                    
                     <label>Schema </label>
                     <select class="form-select w-auto dashboard-schema-select-form"" aria-label=" Small select example">
                         __DB_OPTIONS__
                     </select>
-                    <a href="index.php?action_logout=1" class="navigation-logout-button">Logout</a>
+                    <div class="server-details-container">
+                        <a class="dropdown-toggle server-details-button"  data-bs-toggle="dropdown" aria-expanded="false">
+                          Server
+                        </a>
+                        <div class="dropdown-menu server-detail-popup">
+                            <p>
+                                <b>Host : </b> __CONNECTION_SERVER__ <br>
+                                <b>Port : </b>  __CONNECTION_PORT__ <br>
+                                <b>User : </b> __CONNECTION_USER__
+                            </p>
+                            <a href="#" class="share-connection-button" data-url="__CONNECTION_URL__">Share Connection</a>
+                            <a href="index.php?action_logout=1" class="navigation-logout-button">Logout</a>
+                        </div>
+                    </div>
+                    
                 </div>
             </div>
         </div>
@@ -86,18 +101,28 @@
             });
         });
 
-        function changeScema(schema) {
-
-        }
         $(document).ready(function () {
             $('.dashboard-schema-select-form').change(function () {
                 var selectedValue = $(this).val();
                 window.location.href = 'index.php?action_change_schema=1&schema=' + selectedValue;
             });
+            
             if($('.dashboard-schema-select-form').val().length == 0) {
                 $('.dashboard-tables-container-not-table').show();
                 $('.dashboard-tables-container').hide();
             }
+
+            $('.share-connection-button').click(function() {
+                var url = window.location.origin + window.location.pathname + '?' +$(this).data('url');
+                var temp = $("<input>");
+                $("body").append(temp);
+                temp.val(url).select();
+                document.execCommand("copy");
+                temp.remove();
+                alert('Connection url copied to clipboard');
+            });
+
+
         });
 
     </script>

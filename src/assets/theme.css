@@ -90,13 +90,28 @@ hr {
     font-size: 0.9rem;
 }
 
+.server-details-button {
+    text-decoration: none;
+    color: white;
+    padding-right: 10px;
+    padding-left: 20px;
+    font-weight: bold;
+}
+
+.server-detail-popup {
+    padding: 10px;
+}
+
+.server-detail-popup p {
+    margin-bottom: 5px;
+}
+
 
 .dashboard-table-row-container li {
     font-size: 0.7rem;
 }
 
 .navigation-logout-button {
-    color: white;
     padding-left: 10px;
 }
 
